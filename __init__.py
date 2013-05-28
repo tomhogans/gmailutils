@@ -4,7 +4,7 @@ import logging
 
 
 class InvalidAccountException(Exception): pass
-class RecoveryEmailException(Exception): pass
+class VerificationException(Exception): pass
 class UnknownResponseException(Exception): pass
 
 
@@ -18,6 +18,9 @@ class GmailSession:
         # TODO: Set browser string
 
     def login(self, email, password, recovery_email=None):
+        """ Logs in to a Google Account.  Email and password are normally
+        sufficient, but if VerificationException is raised, the account
+        requires the recovery_email parameter in order to be unlocked. """
         resp = self.req.get(self.GOOGLE_LOGIN_URL)
         html = lxml.etree.HTML(resp.content)
         fields = {i.get('name'): i.get('value') for i in html.xpath('//input')}
@@ -35,7 +38,7 @@ class GmailSession:
             fields['bgresponse'] = ''
             fields['challengetype'] = 'RecoveryEmailChallenge'
             if not recovery_email:
-                raise RecoveryEmailException(email)
+                raise VerificationException(email)
             logging.debug("Answering account verification with recovery email")
             fields['emailAnswer'] = recovery_email
             resp = self.req.post(self.GOOGLE_VERIFICATION_URL, fields)
