@@ -3,9 +3,9 @@ import sys, os
 
 version = '0.1'
 
-setup(name='Gmail',
+setup(name='gmailutils',
       version=version,
-      description="Gmail Utility",
+      description="Gmail Utilities",
       long_description="""Utilities for Gmail Services""",
       classifiers=[], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
       keywords='',
